@@ -20,13 +20,16 @@ const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeM
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const getCSSModuleLocalIdent = require('react-dev-utils/getCSSModuleLocalIdent');
 const paths = require('./paths');
+const WebpackAutoInject = require('webpack-auto-inject-version');
 const modules = require('./modules');
 const getClientEnvironment = require('./env');
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
 const ForkTsCheckerWebpackPlugin = require('react-dev-utils/ForkTsCheckerWebpackPlugin');
 const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
+const version = require('../../package.json').version;
 
 const postcssNormalize = require('postcss-normalize');
+const BundleTracker = require('webpack-bundle-tracker');
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
@@ -53,8 +56,8 @@ module.exports = function (webpackEnv) {
     // It requires a trailing slash, or the file assets will get an incorrect path.
     // In development, we always serve from the root. This makes config easier.
     const publicPath = isEnvProduction
-        ? paths.servedPath
-        : isEnvDevelopment && '/';
+        ? paths.prodPublicPath
+        : isEnvDevelopment && paths.localPublicPath;
     // Some apps do not use client-side routing with pushState.
     // For these, "homepage" can be set to "." to enable relative asset paths.
     const shouldUseRelativeAssetPaths = publicPath === './';
@@ -64,7 +67,7 @@ module.exports = function (webpackEnv) {
     // Omit trailing slash as %PUBLIC_URL%/xyz looks better than %PUBLIC_URL%xyz.
     const publicUrl = isEnvProduction
         ? publicPath.slice(0, -1)
-        : isEnvDevelopment && '';
+        : isEnvDevelopment && paths.localPublicPath;
     // Get environment variables to inject into our app.
     const env = getClientEnvironment(publicUrl);
 
@@ -139,8 +142,8 @@ module.exports = function (webpackEnv) {
             // the line below with these two lines if you prefer the stock client:
             // require.resolve('webpack-dev-server/client') + '?/',
             // require.resolve('webpack/hot/dev-server'),
-            isEnvDevelopment &&
-            require.resolve('react-dev-utils/webpackHotDevClient'),
+            isEnvDevelopment && require.resolve('webpack-dev-server/client') + '?' + paths.localPublicUrl,
+            isEnvDevelopment && require.resolve('webpack/hot/dev-server'),
             // Finally, this is your app's code:
             paths.appIndexJs,
             // We include the app code last so that if there is a runtime error during
@@ -244,12 +247,12 @@ module.exports = function (webpackEnv) {
             // https://twitter.com/wSokra/status/969633336732905474
             // https://medium.com/webpack/webpack-4-code-splitting-chunk-graph-and-the-splitchunks-optimization-be739a861366
             splitChunks: {
-                chunks: 'all',
-                name: false,
+                chunks: 'all'
+                // name: false
             },
             // Keep the runtime chunk separated to enable long term caching
             // https://twitter.com/wSokra/status/969679223278505985
-            runtimeChunk: true,
+            // runtimeChunk: true
         },
         resolve: {
             // This allows you to set a fallback for where Webpack should look for modules.
@@ -558,6 +561,16 @@ module.exports = function (webpackEnv) {
                     };
                 },
             }),
+            isEnvProduction && new WebpackAutoInject({
+                components: {
+                    AutoIncreaseVersion: true
+                },
+                componentsOptions: {
+                    AutoIncreaseVersion: {
+                        runInWatchMode: false
+                    }
+                }
+            }),
             // Moment.js is an extremely popular library that bundles large locale files
             // by default due to how Webpack interprets its code. This is a practical
             // solution that requires the user to opt into importing specific locales.
@@ -608,6 +621,12 @@ module.exports = function (webpackEnv) {
                 // The formatter is invoked directly in WebpackDevServerUtils during development
                 formatter: isEnvProduction ? typescriptFormatter : undefined,
             }),
+            isEnvDevelopment && new BundleTracker({path: paths.statsRoot, filename: paths.devBuildStats}),
+            isEnvProduction && new BundleTracker({path: paths.statsRoot, filename: paths.prodBuildStats}),
+            new webpack.DefinePlugin({
+                __VERSION__: JSON.stringify(version)
+            })
+            // new StyleLintPlugin({}),
         ].filter(Boolean),
         // Some libraries import Node modules but don't use them in the browser.
         // Tell Webpack to provide empty mocks for them so importing them works.

@@ -3,6 +3,7 @@
 const path = require('path');
 const fs = require('fs');
 const url = require('url');
+const localPaths = require('./localPaths');
 
 // Make sure any symlinks in the project folder are resolved:
 // https://github.com/facebook/create-react-app/issues/637
@@ -69,7 +70,6 @@ const resolveModule = (resolveFn, filePath) => {
 module.exports = {
     dotenv: resolveApp('.env'),
     appPath: resolveApp('.'),
-    appBuild: resolveApp('build'),
     appPublic: resolveApp('frontend/public'),
     appHtml: resolveApp('frontend/public/index.html'),
     appIndexJs: resolveModule(resolveApp, 'frontend/src/index'),
@@ -83,6 +83,13 @@ module.exports = {
     appNodeModules: resolveApp('node_modules'),
     publicUrl: getPublicUrl(resolveApp('package.json')),
     servedPath: getServedPath(resolveApp('package.json')),
+    appBuild: resolveApp(localPaths.appBuild),
+    statsRoot: resolveApp(localPaths.statsRoot),
+    localPublicUrl: localPaths.localPublicUrl,
+    localPublicPath: localPaths.localPublicPath,
+    prodPublicPath: localPaths.prodPublicPath,
+    devBuildStats: localPaths.devBuildStats,
+    prodBuildStats: localPaths.prodBuildStats,
 };
 
 

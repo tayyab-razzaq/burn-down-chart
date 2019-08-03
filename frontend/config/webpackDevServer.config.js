@@ -60,7 +60,7 @@ module.exports = function (proxy, allowedHost) {
         hot: true,
         // It is important to tell WebpackDevServer to use the same "root" path
         // as we specified in the config. In development, we always serve from /.
-        publicPath: '/',
+        publicPath: paths.localPublicPath,
         // WebpackDevServer is noisy by default so we emit custom message instead
         // by listening to the compiler events with `compiler.hooks[...].tap` calls above.
         quiet: true,
@@ -74,6 +74,9 @@ module.exports = function (proxy, allowedHost) {
         // Enable HTTPS if the HTTPS environment variable is set to 'true'
         https: protocol === 'https',
         host,
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+        },
         overlay: false,
         historyApiFallback: {
             // Paths with dots should still use the history fallback.

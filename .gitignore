@@ -108,3 +108,14 @@ venv.bak/
 
 # Node Modules
 node_modules
+
+# Static Files
+staticfiles
+
+# frontend build
+static/bundles
+
+
+# webpack stats files
+webpack-stats.dev.json
+webpack-stats.prod.json
