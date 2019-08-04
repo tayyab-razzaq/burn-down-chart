@@ -24,6 +24,7 @@ SECRET_KEY = '4ne-&@+vb%rd%*py%rt3p&6)2x%)z)5*8_d!*7jdnk@%7=!u-i'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+PROD = True
 
 ALLOWED_HOSTS = []
 
@@ -37,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'webpack_loader',
 ]
 
 MIDDLEWARE = [
@@ -117,4 +119,26 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_URL = '/static/'
+STATICFILES_DIRS = (
+    # This lets Django's collectstatic store our bundles
+    os.path.join(BASE_DIR, 'static'),
+)
+
+STATIC_ROOT = 'staticfiles'
+STATIC_URL = '/{}/'.format(STATIC_ROOT)
+
+
+if PROD:
+    WEBPACK_LOADER = {
+        'DEFAULT': {
+            'BUNDLE_DIR_NAME': 'bundles/',
+            'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.prod.json'),
+        }
+    }
+else:
+    WEBPACK_LOADER = {
+        'DEFAULT': {
+            'BUNDLE_DIR_NAME': 'bundles/',
+            'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.dev.json'),
+        }
+    }

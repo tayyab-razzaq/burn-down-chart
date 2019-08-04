@@ -1,7 +1,7 @@
 const STATS_ROOT = './';
 const LOCAL_PUBLIC_URL = 'http://localhost:3000';
 const LOCAL_PUBLIC_PATH = LOCAL_PUBLIC_URL + '/';
-const PROD_PUBLIC_PATH = '/static/bundles/';
+const PROD_PUBLIC_PATH = '/staticfiles/bundles/';
 const APP_BUILD_PATH = './static/bundles/';
 const DEV_BUILD_STATS = 'webpack-stats.dev.json';
 const PROD_BUILD_STATS = 'webpack-stats.prod.json';

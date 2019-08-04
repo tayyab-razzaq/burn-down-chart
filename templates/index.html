@@ -1,10 +1,22 @@
+{% load render_bundle from webpack_loader %}
+{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>React Django</title>
+
+    {% render_bundle 'vendors~main' extension='css' %}
+    {% render_bundle 'main' extension='css' %}
 </head>
+
 <body>
-Hello World!
+<div class="root-container"></div>
+<noscript>
+    You need to enable JavaScript to run this app.
+</noscript>
+{% render_bundle 'vendors~main' extension='js' attrs='async' %}
+{% render_bundle 'main' extension='js' attrs='async' %}
 </body>
+
 </html>
