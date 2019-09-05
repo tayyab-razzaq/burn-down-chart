@@ -45,3 +45,8 @@ storage like cdn or s3
 
 Make sure in index.html of django index template you have rendered
 all possible bundles, for now I've added vendor~main and main.
+
+To use s3 as static file serving
+
+Just set S3_STATIC=True and add your s3 credentials and bucket name and run collectstatic command to upload your static files. 
+Make sure your bucket acl is public-read for build files
