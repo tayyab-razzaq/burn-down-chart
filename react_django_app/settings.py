@@ -25,6 +25,7 @@ SECRET_KEY = '4ne-&@+vb%rd%*py%rt3p&6)2x%)z)5*8_d!*7jdnk@%7=!u-i'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 PROD = True
+S3_STATIC = False
 
 ALLOWED_HOSTS = []
 
@@ -39,9 +40,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'webpack_loader',
+    'storages',
 ]
 
 MIDDLEWARE = [
+    'django.middleware.gzip.GZipMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -124,6 +127,7 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
+FRONTEND_STATIC_ROOT = 'static/bundles/static/'
 STATIC_ROOT = 'staticfiles'
 STATIC_URL = '/{}/'.format(STATIC_ROOT)
 
@@ -142,3 +146,16 @@ else:
             'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.dev.json'),
         }
     }
+
+
+if S3_STATIC:
+    AWS_S3_ACCESS_KEY_ID = 'Your AWS S3 ACCESS Key ID'
+    AWS_S3_SECRET_ACCESS_KEY = 'Your AWS S3 SECRET ACCESS Key'
+    AWS_S3_REGION_NAME = 'bucket region'
+    AWS_STORAGE_BUCKET_NAME = 'bucket name'
+    AWS_DEFAULT_ACL = None
+    AWS_IS_GZIPPED = True
+    AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+
+    STATIC_URL = 'https://%s/' % AWS_S3_CUSTOM_DOMAIN
+    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
