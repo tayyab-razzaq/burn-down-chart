@@ -1,5 +1,5 @@
 """
-WSGI config for react_django_app project.
+WSGI config for burn_down_chart project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'react_django_app.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'burn_down_chart.settings')
 
 application = get_wsgi_application()

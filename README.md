@@ -1,2 +1,2 @@
-# react-django-app
+# Burn Down Chart
 A React app served with Django

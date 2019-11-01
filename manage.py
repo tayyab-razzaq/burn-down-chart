@@ -5,7 +5,7 @@ import sys
 
 
 def main():
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'react_django_app.settings')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'burn_down_chart.settings')
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
