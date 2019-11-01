@@ -2,7 +2,7 @@ const getSuccessData = (response, type, successData) => ({ response, type, succe
 
 const getErrorData = (error, type, errorData) => ({ error, type, errorData });
 
-export const makeServerCall = (
+export const makeAPICall = (
     helperMethod, requestData, initActionType, successActionType, errorActionType, successData = {}, errorData = {}) =>
     dispatch => helperMethod(requestData).then(response => {
         if (response.status >= 200 && response.status < 300) {
