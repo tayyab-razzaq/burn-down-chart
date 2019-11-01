@@ -1,7 +1,7 @@
 import axios from 'axios';
-import { apiUrl } from '../constants';
+import { API_URL } from '../constants';
 
-const getCompleteUrl = requestUrl => apiUrl + requestUrl;
+const getCompleteUrl = requestUrl => API_URL + requestUrl;
 
 const getHeaders = () => ({
     Authorization: `Token ${localStorage.getItem('token')}`,
