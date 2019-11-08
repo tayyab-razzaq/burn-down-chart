@@ -1,26 +1,70 @@
-export const LINE_DATA = {
-    labels: ['04 Nov', '05 Nov', '06 Nov', '07 Nov', '08 Nov', '11 Nov', '12 Nov', '13 Nov', '14 Nov', '15 Nov'],
+const getFields = (label, data, colorOne, colorTwo, colorThere) => ({
+    label,
+    fill: true,
+    lineTension: 0.1,
+    borderCapStyle: 'butt',
+    borderDash: [],
+    borderDashOffset: 0.0,
+    borderJoinStyle: 'miter',
+    pointBorderWidth: 1,
+    pointHoverRadius: 5,
+    pointHoverBorderWidth: 2,
+    pointRadius: 1,
+    pointHitRadius: 10,
+    pointHoverBorderColor: 'rgba(220,220,220,1)',
+    pointBackgroundColor: '#fff',
+    backgroundColor: `rgba(${colorOne}, ${colorTwo}, ${colorThere}, 0.4)`,
+    borderColor: `rgba(${colorOne}, ${colorTwo}, ${colorThere}, 1)`,
+    pointBorderColor: `rgba(${colorOne}, ${colorTwo}, ${colorThere}, 1)`,
+    pointHoverBackgroundColor: `rgba(${colorOne}, ${colorTwo}, ${colorThere}, 1)`,
+    data
+});
+
+export const getLineData = (labels, expectedData, currentData) => ({
+    labels: labels,
     datasets: [
         {
-            label: '1.7.0',
-            fill: true,
-            lineTension: 0.1,
-            backgroundColor: 'rgba(75,192,192,0.4)',
-            borderColor: 'rgba(75,192,192,1)',
-            borderCapStyle: 'butt',
-            borderDash: [],
-            borderDashOffset: 0.0,
-            borderJoinStyle: 'miter',
-            pointBorderColor: 'rgba(75,192,192,1)',
-            pointBackgroundColor: '#fff',
-            pointBorderWidth: 1,
-            pointHoverRadius: 5,
-            pointHoverBackgroundColor: 'rgba(75,192,192,1)',
-            pointHoverBorderColor: 'rgba(220,220,220,1)',
-            pointHoverBorderWidth: 2,
-            pointRadius: 1,
-            pointHitRadius: 10,
-            data: [150, 132, 114, 98, 80, 62, 44, 24, 6, 0]
+            ...getFields('Expected', expectedData, 75, 192, 192)
+        },
+        {
+            ...getFields('Current', currentData, 175, 192, 192)
         }
     ]
+});
+
+export const getFieldsList = (startDate, endDate) => {
+    const activeFieldsList = [];
+    const diffDays = ((startDate && endDate) ? (endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24): 0) + 1;
+    let index = 0;
+    while(index < diffDays) {
+        index++;
+        activeFieldsList.push(0);
+    }
+    return activeFieldsList;
+};
+
+export const getFieldsListWithLabels = (startDate, endDate) => {
+    let loopStartDate = startDate;
+    const labels = [];
+    const fields = [];
+    while (loopStartDate <= endDate) {
+        if (loopStartDate.getDay() === 6 || loopStartDate.getDay() === 0) {
+            loopStartDate = new Date(loopStartDate.setTime( loopStartDate.getTime() + 86400000 ));
+            continue;
+        }
+        labels.push(loopStartDate.toDateString());
+        fields.push(0);
+        loopStartDate = new Date(loopStartDate.setTime( loopStartDate.getTime() + 86400000 ));
+    }
+    return {fields, labels};
+};
+
+export const getFieldsLabels = (startDate, endDate) => {
+    let loopStartDate = startDate;
+    const labels = [];
+    while (loopStartDate <= endDate) {
+        labels.push(loopStartDate.toDateString());
+        loopStartDate = new Date(loopStartDate.setTime( loopStartDate.getTime() + 86400000 ));
+    }
+    return labels
 };
