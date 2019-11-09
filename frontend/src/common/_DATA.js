@@ -32,19 +32,8 @@ export const getLineData = (labels, expectedData, currentData) => ({
     ]
 });
 
-export const getFieldsList = (startDate, endDate) => {
-    const activeFieldsList = [];
-    const diffDays = ((startDate && endDate) ? (endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24): 0) + 1;
-    let index = 0;
-    while(index < diffDays) {
-        index++;
-        activeFieldsList.push(0);
-    }
-    return activeFieldsList;
-};
-
 export const getFieldsListWithLabels = (startDate, endDate) => {
-    let loopStartDate = startDate;
+    let loopStartDate = new Date(startDate);
     const labels = [];
     const fields = [];
     while (loopStartDate <= endDate) {
@@ -57,14 +46,4 @@ export const getFieldsListWithLabels = (startDate, endDate) => {
         loopStartDate = new Date(loopStartDate.setTime( loopStartDate.getTime() + 86400000 ));
     }
     return {fields, labels};
-};
-
-export const getFieldsLabels = (startDate, endDate) => {
-    let loopStartDate = startDate;
-    const labels = [];
-    while (loopStartDate <= endDate) {
-        labels.push(loopStartDate.toDateString());
-        loopStartDate = new Date(loopStartDate.setTime( loopStartDate.getTime() + 86400000 ));
-    }
-    return labels
 };
