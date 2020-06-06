@@ -1,6 +1,6 @@
 boto3==1.9.222
 botocore==1.12.222
-Django==2.2.10
+Django==2.2.13
 django-storages==1.7.1
 django-webpack-loader==0.6.0
 docutils==0.15.2
